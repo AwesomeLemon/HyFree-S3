@@ -1,0 +1,15 @@
+defaults:
+  - base
+  - skip_none
+  - _self_
+
+data:
+  fold: 0
+  base_dataset: 'polyp_base_220' # see dataset/preprocess_new/polyp/polyp_to_nnunet_folds
+  dataset_descriptor: 'polyp'
+  original_data_was_png: True
+
+general:
+  exp_name: 'nnunet_polyp_000'
+  exp_desc: 'full run'
+  seed_base: 71173

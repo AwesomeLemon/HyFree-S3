@@ -1,0 +1,15 @@
+defaults:
+  - base
+  - skip_none
+  - _self_
+
+data:
+  fold: 0
+  base_dataset: 'Dataset507_qata'# see dataset/preprocess_new/qata/qata_to_nnunet_folds
+  dataset_descriptor: 'qata'
+  original_data_was_png: True
+
+general:
+  exp_name: 'nnunet_qata_000'
+  exp_desc: 'full run'
+  seed_base: 71173

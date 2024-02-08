@@ -1,0 +1,44 @@
+skip:
+  real:
+    A: &hosp_A_real
+      applied_unet_train: True
+
+      eval:
+        A: True
+        B: True
+    B:
+      <<: *hosp_A_real
+    all:
+      applied_unet_train: True
+      eval:
+        A: True
+        B: True
+  syn:
+    A: &hosp_A_syn
+      prepare_data_for_gan: True
+      determine_threshold: True
+      gan: True
+      generate: True
+      filter_generated: True
+      segment: True
+      applied_unet_train: True
+      eval:
+        A: True
+        B: True
+    B:
+      <<: *hosp_A_syn
+    all:
+      merge: True
+      applied_unet_train: True
+      eval:
+        A: True
+        B: True
+  syn-real:
+    A: &hosp_A_syn_real
+      prepare_data_syn_real: True
+      applied_unet_from_syn_pretrain: True
+      eval:
+        A: True
+        B: True
+    B:
+      <<: *hosp_A_syn_real

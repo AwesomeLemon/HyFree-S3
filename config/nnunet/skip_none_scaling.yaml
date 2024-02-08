@@ -1,0 +1,188 @@
+skip:
+  real:
+    A: &hosp_A_real
+      applied_unet_train: False
+
+      eval:
+        A: False
+        B: False
+        C: False
+        D: False
+        E: False
+        F: False
+        G: False
+        H: False
+    B:
+      <<: *hosp_A_real
+    C:
+      <<: *hosp_A_real
+    D:
+      <<: *hosp_A_real
+    E:
+      <<: *hosp_A_real
+    F:
+      <<: *hosp_A_real
+    G:
+      <<: *hosp_A_real
+    H:
+      <<: *hosp_A_real
+    all:
+      applied_unet_train: False
+      eval:
+        A: False
+        B: False
+        C: False
+        D: False
+        E: False
+        F: False
+        G: False
+        H: False
+  syn:
+    A: &hosp_A_syn
+      prepare_data_for_gan: False
+      determine_threshold: False
+      gan: False
+      generate: False
+      filter_generated: False
+      segment: False
+      applied_unet_train: True
+      eval:
+        A: False
+        B: False
+        C: False
+        D: False
+        E: False
+        F: False
+        G: False
+        H: False
+    B:
+      <<: *hosp_A_syn
+    C:
+      <<: *hosp_A_syn
+    D:
+      <<: *hosp_A_syn
+    E:
+      <<: *hosp_A_syn
+    F:
+      <<: *hosp_A_syn
+    G:
+      <<: *hosp_A_syn
+    H:
+      <<: *hosp_A_syn
+    all:
+      merge: False
+      applied_unet_train: False
+      eval:
+        A: False
+        B: False
+        C: False
+        D: False
+        E: False
+        F: False
+        G: False
+        H: False
+    AB:
+      merge: False
+      applied_unet_train: False
+      eval:
+        A: False
+        B: False
+        C: False
+        D: False
+        E: False
+        F: False
+        G: False
+        H: False
+    ABCD:
+      merge: False
+      applied_unet_train: False
+      eval:
+        A: False
+        B: False
+        C: False
+        D: False
+        E: False
+        F: False
+        G: False
+        H: False
+  syn-real:
+    A: &hosp_A_syn_real
+      prepare_data_syn_real: False
+      applied_unet_from_syn_pretrain: False
+      eval:
+        A: False
+        B: False
+        C: False
+        D: False
+        E: False
+        F: False
+        G: False
+        H: False
+    B:
+      <<: *hosp_A_syn_real
+    C:
+      <<: *hosp_A_syn_real
+    D:
+      <<: *hosp_A_syn_real
+    E:
+      <<: *hosp_A_syn_real
+    F:
+      <<: *hosp_A_syn_real
+    G:
+      <<: *hosp_A_syn_real
+    H:
+      <<: *hosp_A_syn_real
+  syn2-real:
+    A: &hosp_A_syn2_real
+      prepare_data_syn_real: False
+      applied_unet_from_syn_pretrain: False
+      eval:
+        A: False
+        B: False
+        C: False
+        D: False
+        E: False
+        F: False
+        G: False
+        H: False
+    B:
+      <<: *hosp_A_syn2_real
+    C:
+      <<: *hosp_A_syn2_real
+    D:
+      <<: *hosp_A_syn2_real
+    E:
+      <<: *hosp_A_syn2_real
+    F:
+      <<: *hosp_A_syn2_real
+    G:
+      <<: *hosp_A_syn2_real
+    H:
+      <<: *hosp_A_syn2_real
+  syn4-real:
+    A: &hosp_A_syn4_real
+      prepare_data_syn_real: False
+      applied_unet_from_syn_pretrain: False
+      eval:
+        A: False
+        B: False
+        C: False
+        D: False
+        E: False
+        F: False
+        G: False
+        H: False
+    B:
+      <<: *hosp_A_syn4_real
+    C:
+      <<: *hosp_A_syn4_real
+    D:
+      <<: *hosp_A_syn4_real
+    E:
+      <<: *hosp_A_syn4_real
+    F:
+      <<: *hosp_A_syn4_real
+    G:
+      <<: *hosp_A_syn4_real
+    H:
+      <<: *hosp_A_syn4_real

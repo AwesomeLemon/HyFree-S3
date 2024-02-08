@@ -1,0 +1,15 @@
+defaults:
+  - base
+  - skip_none_scaling
+  - _self_
+
+data:
+  fold: 0
+  base_dataset: 'qata_base_500' # see "qata_to_nnunet_folds.py" and then "add_scaling_folds.py"
+  dataset_descriptor: 'qata'
+  original_data_was_png: True
+
+general:
+  exp_name: 'nnunet_qata_001'
+  exp_desc: 'scaling experiment'
+  seed_base: 71173
