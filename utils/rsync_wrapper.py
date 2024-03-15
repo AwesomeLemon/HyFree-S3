@@ -19,7 +19,7 @@ class RsyncWrapper:
     def _get_name_this_node(self):
         return socket.gethostname()
 
-    def download(self, path, if_dir=False):
+    def download(self, path, if_dir=False, repeat_on_fail=True):
         if self.if_shared_fs:
             return
         if self.ray_head_node == self._get_name_this_node():
@@ -39,8 +39,10 @@ class RsyncWrapper:
             command = ['rsync', '-hzavP', f'{self.ssh_user}@{self.ray_head_node}:{path}', output_path]
             result = subprocess.run(command)
             while result.returncode != 0:
-                print('rsync failed, waiting for 5s and retrying')
+                print('rsync failed' + (', waiting for 5s and retrying' if repeat_on_fail else ''))
                 print(f'{self._get_name_this_node()=} {command=}')
+                if not repeat_on_fail:
+                    break
                 time.sleep(5)
                 result = subprocess.run(command)
         except Exception as e:  # it may be alright that the file doesn't exist

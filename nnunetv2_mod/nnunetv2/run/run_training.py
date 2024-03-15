@@ -152,7 +152,9 @@ def run_training(dataset_name_or_id: Union[str, int],
                  val_with_best: bool = False,
                  device: torch.device = torch.device('cuda'),
                  num_epochs: int = 1000,
-                 schedule_name: str = 'poly'):
+                 schedule_name: str = 'poly',
+                 continue_for = None
+                 ):
     if isinstance(fold, str):
         if fold != 'all':
             try:
@@ -193,7 +195,8 @@ def run_training(dataset_name_or_id: Union[str, int],
     else:
         nnunet_trainer = get_trainer_from_args(dataset_name_or_id, configuration, fold, trainer_class_name,
                                                plans_identifier, use_compressed_data, device=device,
-                                               num_epochs=num_epochs, schedule_name=schedule_name)
+                                               num_epochs=num_epochs, schedule_name=schedule_name,
+                                               continue_for=continue_for)
 
         if disable_checkpointing:
             nnunet_trainer.disable_checkpointing = disable_checkpointing

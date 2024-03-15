@@ -1,0 +1,15 @@
+defaults:
+  - base
+  - _self_
+
+data:
+  fold: 0
+  base_dataset: 'polyp_base_220'
+  dataset_descriptor: 'polyp'
+
+general:
+  exp_name: 'federated_polyp_00'
+  exp_desc: ''
+  ray_address: '192.168.63.148:6379'
+  ray_head_node: 'star05.scilens.private'
+  seed_base: 71173

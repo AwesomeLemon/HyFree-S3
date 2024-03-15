@@ -1,0 +1,20 @@
+path:
+  dir_my: '/export/scratch1/home/aleksand/s2'
+  data: '${path.dir_my}/data'
+  logs: '${path.dir_my}/auto-share/logs/'
+  exp: '${path.logs}/${general.exp_name}'
+
+general:
+  ray_address: '192.168.63.147:6379'
+  ssh_user: 'aleksand'
+  ray_head_node: 'star04.scilens.private'
+  if_shared_fs: False
+  final_upload_node: 'star04.scilens.private'
+
+train:
+  nnunet_epochs: 1000
+  nnunet_epochs_step: 1
+
+skip:
+  train: False
+  test: False

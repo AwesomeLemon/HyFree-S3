@@ -1,0 +1,16 @@
+defaults:
+  - base
+  - _self_
+
+data:
+  fold: 0
+  base_dataset: 'Dataset507_qata'
+  dataset_descriptor: 'qata'
+
+general:
+  exp_name: 'federated_qata_00'
+  exp_desc: ''
+  ray_address: '192.168.63.148:6379'
+  ray_head_node: 'star05.scilens.private'
+  final_upload_node: 'star05.scilens.private'
+  seed_base: 71173

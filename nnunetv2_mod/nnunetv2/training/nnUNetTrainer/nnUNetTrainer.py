@@ -68,7 +68,7 @@ from nnunetv2_mod.nnunetv2.training.lr_scheduler.polylr_warmup import PolyLRWarm
 
 class nnUNetTrainer(object):
     def __init__(self, plans: dict, configuration: str, fold: int, dataset_json: dict, unpack_dataset: bool = True,
-                 device: torch.device = torch.device('cuda'), num_epochs=1000, schedule_name='poly'):
+                 device: torch.device = torch.device('cuda'), num_epochs=1000, schedule_name='poly', continue_for=None):
         # From https://grugbrain.dev/. Worth a read ya big brains ;-)
 
         # apex predator of grug is complexity
@@ -149,6 +149,7 @@ class nnUNetTrainer(object):
         self.num_epochs = num_epochs
         self.current_epoch = 0
         self.schedule_name = schedule_name
+        self.continue_for = continue_for
 
         ### Dealing with labels/regions
         self.label_manager = self.plans_manager.get_label_manager(dataset_json)
@@ -182,7 +183,7 @@ class nnUNetTrainer(object):
         # self.configure_rotation_dummyDA_mirroring_and_inital_patch_size and will be saved in checkpoints
 
         ### checkpoint saving stuff
-        self.save_every = 50
+        self.save_every = 50 if continue_for is None else continue_for
         self.disable_checkpointing = False
 
         ## DDP batch size and oversampling can differ between workers and needs adaptation
@@ -1112,6 +1113,7 @@ class nnUNetTrainer(object):
             new_state_dict[key] = value
 
         self.my_init_kwargs = checkpoint['init_args']
+        print(f"{checkpoint['current_epoch']=}")
         self.current_epoch = checkpoint['current_epoch']
         self.logger.load_checkpoint(checkpoint['logging'])
         self._best_ema = checkpoint['_best_ema']
@@ -1129,7 +1131,10 @@ class nnUNetTrainer(object):
                 self.network._orig_mod.load_state_dict(new_state_dict)
             else:
                 self.network.load_state_dict(new_state_dict)
-        self.optimizer.load_state_dict(checkpoint['optimizer_state'])
+        if checkpoint['optimizer_state'] is not None:
+            self.optimizer.load_state_dict(checkpoint['optimizer_state'])
+        else:
+            print('Optimizer state is not loaded!')
         if self.grad_scaler is not None:
             if checkpoint['grad_scaler_state'] is not None:
                 self.grad_scaler.load_state_dict(checkpoint['grad_scaler_state'])
@@ -1269,7 +1274,10 @@ class nnUNetTrainer(object):
     def run_training(self):
         self.on_train_start()
 
-        for epoch in range(self.current_epoch, self.num_epochs):
+        train_until = self.num_epochs
+        if self.continue_for is not None:
+            train_until = self.current_epoch + self.continue_for
+        for epoch in range(self.current_epoch, train_until):
             self.on_epoch_start()
 
             self.on_train_epoch_start()
@@ -1287,4 +1295,5 @@ class nnUNetTrainer(object):
 
             self.on_epoch_end()
 
-        self.on_train_end()
+        if epoch == self.num_epochs - 1:
+            self.on_train_end()
