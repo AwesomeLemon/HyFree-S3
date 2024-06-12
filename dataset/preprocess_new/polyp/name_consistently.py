@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 from pathlib import Path
 import shutil
@@ -6,8 +8,41 @@ from collections import defaultdict
 from skimage import io
 from tqdm import tqdm
 
+def hyperkvasir_name_consistently(dataset_path, output_dir):
+    dataset_path = Path(dataset_path)
+    output_dir = Path(output_dir)
+    if output_dir.exists():
+        shutil.rmtree(output_dir)
+    images_dir = output_dir / 'images'
+    masks_dir = output_dir / 'masks'
 
-def name_consistently(dataset_path, output_dir):
+    images_dir.mkdir(parents=True, exist_ok=True)
+    masks_dir.mkdir(parents=True, exist_ok=True)
+
+    images_path = dataset_path / 'images'
+    masks_path = dataset_path / 'masks'
+
+    subject_id_map = defaultdict(list)
+
+    for new_id, img_path in enumerate(tqdm(images_path.glob('*.jpg'))):
+        mask_file = masks_path / img_path.name
+        mask = io.imread(mask_file)
+        # since mask are provided as jpegs, they have values that are not 0 or 255 exactly
+        mask[mask < 128] = 0
+        mask[mask >= 128] = 1
+
+        new_img_name = f"hyperkvasir_{str(new_id).zfill(4)}.png"
+        new_mask_name = new_img_name
+
+        io.imsave(images_dir / new_img_name, io.imread(img_path))
+        io.imsave(masks_dir / new_mask_name, mask, check_contrast=False)
+
+        subject_id_map[new_id].append(new_id)
+
+    with open(output_dir / 'subject_id_map.yaml', 'w') as file:
+        yaml.safe_dump(dict(subject_id_map), file)
+
+def clinicdb_name_consistently(dataset_path, output_dir):
     dataset_path = Path(dataset_path)
     output_dir = Path(output_dir)
     if output_dir.exists():
@@ -81,4 +116,20 @@ def name_consistently(dataset_path, output_dir):
 
 if __name__ == '__main__':
     data_superdir = Path('/export/scratch2/data/aleksand/data')
-    name_consistently(data_superdir / 'CVC-ClinicDB', data_superdir / 'clinicdb_v0')
+
+    # remove duplicates from hyperkvasir
+    hyperkvasir_orig = data_superdir / 'hyper-kvasir'
+    # need to delete only 1 of each duplicate pair
+    duplicates = ['19d0d3bb-5d6c-4ac4-be99-47b9517c8927.jpg',
+                  '3e67665f-b495-42fb-8ffe-ed173204503d.jpg',
+                  '84ca86b4-e3b9-461d-995f-a96241ce7bba.jpg',
+                  '3c034222-f389-4f6c-93f2-0d5606fe19ef.jpg'
+                  ]
+    hyperkvasir_no_duplicates = data_superdir / 'hyper-kvasir-removed-duplicates'
+    shutil.copytree(hyperkvasir_orig, hyperkvasir_no_duplicates)
+    for duplicate in duplicates:
+        os.remove(hyperkvasir_no_duplicates / 'images' / duplicate)
+        os.remove(hyperkvasir_no_duplicates / 'masks' / duplicate)
+
+    hyperkvasir_name_consistently(hyperkvasir_no_duplicates, data_superdir / 'hyperkvasir_v1')
+    clinicdb_name_consistently(data_superdir / 'CVC-ClinicDB', data_superdir / 'clinicdb_v0')

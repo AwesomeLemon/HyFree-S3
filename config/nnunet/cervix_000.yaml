@@ -1,0 +1,16 @@
+defaults:
+  - base
+  - skip_none
+  - _self_
+
+data:
+  fold: 0
+  base_dataset: 'Dataset503_cervix'
+  dataset_descriptor: 'cervix'
+
+general:
+  exp_name: 'nnunet_cervix_000'
+  exp_desc: ''
+  ray_address: '192.168.63.148:6379'
+  ray_head_node: 'star05.scilens.private'
+  seed_base: 71173
